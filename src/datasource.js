@@ -42,6 +42,7 @@ function (angular, _, dateMath, moment) {
     var GRANULARITIES = [
       ['second', moment.duration(1, 'second')],
       ['minute', moment.duration(1, 'minute')],
+      ['five_minute', moment.duration(5, 'minute')],
       ['fifteen_minute', moment.duration(15, 'minute')],
       ['thirty_minute', moment.duration(30, 'minute')],
       ['hour', moment.duration(1, 'hour')],
