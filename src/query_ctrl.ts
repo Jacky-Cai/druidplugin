@@ -19,6 +19,7 @@ export class DruidQueryCtrl extends QueryCtrl {
   getDimensions: any;
   getFilterValues: any;
   queryTypes: any;
+  queryModes: any;
   filterTypes: any;
   aggregatorTypes: any;
   postAggregatorTypes: any;
@@ -72,7 +73,11 @@ export class DruidQueryCtrl extends QueryCtrl {
       if (!this.target.queryType) {
         this.target.queryType = this.defaultQueryType;
       }
+      if (!this.target.queryMode) {
+        this.target.queryMode = "timeseries";
+      }
 
+    this.queryModes = ["table", "timeseries"];
     this.queryTypes = _.keys(this.queryTypeValidators);
     this.filterTypes = _.keys(this.filterValidators);
     this.aggregatorTypes = _.keys(this.aggregatorValidators);

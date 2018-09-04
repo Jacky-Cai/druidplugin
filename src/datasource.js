@@ -135,7 +135,7 @@ function (angular, _, dateMath, moment) {
         //Round up to start of an interval
         //Width of bar chars in Grafana is determined by size of the smallest interval
         var roundedFrom = granularity === "all" ? from : roundUpStartTime(from, granularity);
-        if(dataSource.periodGranularity!=""){
+        if(dataSource.periodGranularity!==""){
             if(granularity==='day'){
                 granularity = {"type": "period", "period": "P1D", "timeZone": dataSource.periodGranularity}
             }
@@ -180,7 +180,10 @@ function (angular, _, dateMath, moment) {
         var dimension = templateSrv.replace(target.dimension);
         promise = this._topNQuery(datasource, intervals, granularity, filters, aggregators, postAggregators, threshold, metric, dimension)
           .then(function(response) {
-            return convertTopNData(response.data, dimension, metric);
+              if(target.queryMode === "timeseries") {
+                  return convertTopNData(response.data, dimension, metric);
+              }//else table
+              return convertTopNTableData(response.data, dimension, metric, metricNames)
           });
       }
       else if (target.queryType === 'groupBy') {
@@ -218,15 +221,19 @@ function (angular, _, dateMath, moment) {
       Druid calculates metrics based on the intervals specified in the query but returns a timestamp rounded down.
       We need to adjust the first timestamp in each time series
       */
-      return promise.then(function (metrics) {
-        var fromMs = formatTimestamp(from);
-        metrics.forEach(function (metric) {
-          if (!_.isEmpty(metric.datapoints[0]) && metric.datapoints[0][1] < fromMs) {
-            metric.datapoints[0][1] = fromMs;
-          }
-        });
-        return metrics;
-      });
+      if(target.queryMode === "timeseries") {
+          return promise.then(function (metrics) {
+              var fromMs = formatTimestamp(from);
+              metrics.forEach(function (metric) {
+                  if (!_.isEmpty(metric.datapoints[0]) && metric.datapoints[0][1] < fromMs) {
+                      metric.datapoints[0][1] = fromMs;
+                  }
+              });
+              return metrics;
+          });
+      }
+      //else table
+      return promise;
     };
 
     this._selectQuery = function (datasource, intervals, granularity, dimension, metric, filters, selectThreshold) {
@@ -490,7 +497,49 @@ function (angular, _, dateMath, moment) {
       });
     }
 
-    function convertGroupByData(md, groupBy, metrics) {
+
+      function convertTopNTableData(md, dimension, metric, metricNames) {
+          var columns = [{"text":dimension,"type":"string"}];
+          metricNames.forEach(function (item){
+              columns.push({"text":item ,"type":"number"})
+          });
+          if(!md) {
+              console.error("no result");
+              return [
+                  {
+                      "columns":columns,
+                      "rows":[],
+                      "type":"table"
+                  }
+              ];
+
+          }
+          var rows = (md[0].result).map( function(item) {
+              var row = [item[dimension]];
+              metricNames.forEach(function(metric) {
+                 row.push(item[metric]);
+              })
+              return row;
+          });
+          return [
+              {
+                  "columns":columns,
+                  "rows":rows,
+                  "type":"table"
+              }
+          ];
+
+          //Convert object keyed by dimension values into an array
+          //of objects {target: <dimVal>, datapoints: <metric time series>}
+          // return _.map(mergedData, function (vals, key) {
+          //     return {
+          //         target: key,
+          //         datapoints: vals
+          //     };
+          // });
+      }
+
+      function convertGroupByData(md, groupBy, metrics) {
       var mergedData = md.map(function (item) {
         /*
           The first map() transforms the list Druid events into a list of objects
