@@ -97,6 +97,19 @@
                 <i class="fa fa-warning"></i>
             </label>
         </div>
+
+        <div ng-switch-when="topN" class="gf-form">
+            <label class="gf-form-label query-keyword width-6">
+                ShowMetric
+            </label>
+            <input type="text" class="gf-form-input" ng-model="ctrl.target.druidShowMetric" spellcheck='false'
+                   placeholder="showMetric" ng-blur="ctrl.targetBlur()"/>
+            <label class="gf-form-label" bs-tooltip="ctrl.target.errors.druidShowMetric" style="color: rgb(229, 189, 28)"
+                   ng-show="ctrl.target.errors.druidShowMetric">
+                <i class="fa fa-warning"></i>
+            </label>
+        </div>
+
         <div ng-switch-when="topN" class="gf-form">
             <label class="gf-form-label query-keyword width-4">
                 Limit

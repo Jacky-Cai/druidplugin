@@ -177,7 +177,7 @@ function (angular, _, dateMath, moment) {
 
       if (target.queryType === 'topN') {
         var threshold = target.limit;
-        var metric = target.druidMetric;
+        var metric = target.druidShowMetric ? target.druidShowMetric : target.druidMetric;
         var dimension = templateSrv.replace(target.dimension);
         promise = this._topNQuery(datasource, intervals, granularity, filters, aggregators, postAggregators, threshold, metric, dimension)
           .then(function(response) {
