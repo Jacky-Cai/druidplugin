@@ -184,7 +184,7 @@ function (angular, _, dateMath, moment) {
               if(target.queryMode === "timeseries") {
                   return convertTopNTimeSeriesData(response.data, dimension, metric);
               }//else table
-              return convertTopNTableData(response.data, dimension, metric, metricNames)
+              return convertTopNTableData(response.data, dimension, metricNames)
           });
       }
       else if (target.queryType === 'groupBy') {
