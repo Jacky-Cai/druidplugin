@@ -182,7 +182,7 @@ function (angular, _, dateMath, moment) {
         promise = this._topNQuery(datasource, intervals, granularity, filters, aggregators, postAggregators, threshold, metric, dimension)
           .then(function(response) {
               if(target.queryMode === "timeseries") {
-                  return convertTopNData(response.data, dimension, metric);
+                  return convertTopNTimeSeriesData(response.data, dimension, metric);
               }//else table
               return convertTopNTableData(response.data, dimension, metric, metricNames)
           });
@@ -191,7 +191,10 @@ function (angular, _, dateMath, moment) {
         limitSpec = getLimitSpec(target.limit, target.orderBy);
         promise = this._groupByQuery(datasource, intervals, granularity, filters, aggregators, postAggregators, groupBy, limitSpec)
           .then(function(response) {
-            return convertGroupByData(response.data, groupBy, metricNames);
+              if(target.queryMode === "timeSeries") {
+                  return convertGroupByTimeSeriesData(response.data, groupBy, metricNames);
+              } //else table
+              return convertGroupByTableData(response.data, groupBy, metricNames);
           });
       }
       else if (target.queryType === 'select') {
@@ -395,7 +398,7 @@ function (angular, _, dateMath, moment) {
       .join("-");
     }
 
-    function convertTopNData(md, dimension, metric) {
+    function convertTopNTimeSeriesData(md, dimension, metric) {
       /*
         Druid topN results look like this:
         [
@@ -499,48 +502,54 @@ function (angular, _, dateMath, moment) {
     }
 
 
-      function convertTopNTableData(md, dimension, metric, metricNames) {
-          var columns = [{"text":dimension,"type":"string"}];
-          metricNames.forEach(function (item){
-              columns.push({"text":item ,"type":"number"})
-          });
-          if(!md) {
-              console.error("no result");
-              return [
-                  {
-                      "columns":columns,
-                      "rows":[],
-                      "type":"table"
-                  }
-              ];
-
-          }
-          var rows = (md[0].result).map( function(item) {
+      function convertTopNTableData(md, dimension, metricNames) {
+           var rows = (md[0].result).map( function(item) {
               var row = [item[dimension]];
               metricNames.forEach(function(metric) {
                  row.push(item[metric]);
-              })
+              });
               return row;
           });
           return [
               {
-                  "columns":columns,
+                  "columns":columeDefsOf([dimension], metricNames),
                   "rows":rows,
                   "type":"table"
               }
           ];
-
-          //Convert object keyed by dimension values into an array
-          //of objects {target: <dimVal>, datapoints: <metric time series>}
-          // return _.map(mergedData, function (vals, key) {
-          //     return {
-          //         target: key,
-          //         datapoints: vals
-          //     };
-          // });
       }
 
-      function convertGroupByData(md, groupBy, metrics) {
+      function convertGroupByTableData(md, groupBys, metricNames) {
+          var rows = md.map( function(item) {
+              var row = _.map(groupBys, function(groupBy) {
+                  return item.event[groupBy]
+              });
+              metricNames.forEach(function(metric) {
+                  row.push(item.event[metric]);
+              });
+              return row;
+          });
+          return [
+              {
+                  "columns":columeDefsOf(groupBys, metricNames),
+                  "rows":rows,
+                  "type":"table"
+              }
+          ];
+      }
+
+      function columeDefsOf(dimensions, metricNames) {
+          var columns = _.map(dimensions, function(dimension) {
+                  return {"text": dimension, "type": "string"};
+              }
+          );
+          metricNames.forEach(function (item){
+              columns.push({"text":item ,"type":"number"})
+          });
+          return columns;
+      }
+
+      function convertGroupByTimeSeriesData(md, groupBy, metrics) {
       var mergedData = md.map(function (item) {
         /*
           The first map() transforms the list Druid events into a list of objects
@@ -590,7 +599,7 @@ function (angular, _, dateMath, moment) {
       });
     }
 
-    function convertSelectData(data){
+      function convertSelectData(data){
       var resultList = _.map(data, "result");
       var eventsList = _.map(resultList, "events");
       var eventList = _.flatten(eventsList);
