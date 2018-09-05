@@ -149,6 +149,11 @@ function (angular, _, dateMath, moment) {
       });
     };
 
+      this.metricFindQuery = function(query, options) {
+
+          return Promise.resolve([{"text":"one", "value":1}, {"text":"two", "value":2}])
+      };
+
     this._doQuery = function (from, to, granularity, target) {
 
       function splitCardinalityFields(aggregator) {
