@@ -555,8 +555,18 @@
                 </div>
                 <div ng-switch-when="quantile">
                     <label class="gf-form-label">
-                        {{postAggregator.type}}:&nbsp;name&nbsp;=&nbsp;{{postAggregator.name}},&nbsp;field&nbsp;=&nbsp;{{postAggregator.fieldName}},
+                        {{postAggregator.type}}:&nbsp;name&nbsp;=&nbsp;{{postAggregator.name}},&nbsp;field =&nbsp;{{postAggregator.fieldName}},
                         &nbsp;prob&nbsp;=&nbsp;{{postAggregator.probability}}
+                        <a ng-click="ctrl.removePostAggregator($index)">
+                            <i class="fa fa-remove"></i>
+                        </a>
+                    </label>
+                </div>
+
+                <div ng-switch-when="javascript">
+                    <label class="gf-form-label">
+                        {{postAggregator.type}}:&nbsp;name&nbsp;=&nbsp;{{postAggregator.name}},&nbsp;fieldNames =&nbsp;{{postAggregator.fieldNames}},
+                        function&nbsp;=&nbsp;{{postAggregator.function}}
                         <a ng-click="ctrl.removePostAggregator($index)">
                             <i class="fa fa-remove"></i>
                         </a>
@@ -618,6 +628,19 @@
                    ng-blur="ctrl.targetBlur()">
             <input type="text" ng-switch-when="quantile" class="input-small gf-form-input" spellcheck="false"
                    ng-model="ctrl.target.currentPostAggregator.probability" placeholder="probability"
+                   ng-blur="ctrl.targetBlur()">
+        </div>
+
+        <!-- javascript -->
+        <div class="gf-form" ng-show="ctrl.addPostAggregatorMode" ng-switch on="ctrl.target.currentPostAggregator.type">
+            <input type="text" ng-switch-when="javascript" class="input-small gf-form-input" spellcheck="false"
+                   ng-model="ctrl.target.currentPostAggregator.name" placeholder="output name"
+                   ng-blur="ctrl.targetBlur()">
+            <input type="text" ng-switch-when="javascript" class="input-small gf-form-input" spellcheck="false"
+                   ng-model="ctrl.target.currentPostAggregator.function" placeholder="function(x) {return x;}"
+                   ng-blur="ctrl.targetBlur()">
+            <input type="text" ng-switch-when="javascript" class="input-small gf-form-input" spellcheck="false"
+                   ng-model="ctrl.target.currentPostAggregator.fieldNames" placeholder="fieldNames"
                    ng-blur="ctrl.targetBlur()">
         </div>
 

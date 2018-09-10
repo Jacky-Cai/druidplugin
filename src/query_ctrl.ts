@@ -49,10 +49,11 @@ export class DruidQueryCtrl extends QueryCtrl {
       "thetaSketch": this.validateThetaSketchAggregator.bind(this)
     };
     postAggregatorValidators = {
-      "arithmetic": this.validateArithmeticPostAggregator.bind(this),
-      "max": this.validateMaxPostAggregator.bind(this),
-      "min": this.validateMinPostAggregator.bind(this),
-      "quantile": this.validateQuantilePostAggregator.bind(this)
+        "arithmetic": this.validateArithmeticPostAggregator.bind(this),
+        "max": this.validateMaxPostAggregator.bind(this),
+        "min": this.validateMinPostAggregator.bind(this),
+        "quantile": this.validateQuantilePostAggregator.bind(this),
+        "javascript": this.validateJavascriptPostAggregator.bind(this)
     };
 
     arithmeticPostAggregatorFns = {'+': null, '-': null, '*': null, '/': null};
@@ -561,7 +562,15 @@ export class DruidQueryCtrl extends QueryCtrl {
       return null;
     }
 
-  validateTarget() {
+    validateJavascriptPostAggregator(target) {
+        if (target.currentPostAggregator.fieldNames && !Array.isArray(target.currentPostAggregator.fieldNames)) {
+            target.currentPostAggregator.fieldNames = target.currentPostAggregator.fieldNames.split(",");
+        }
+        return null;
+    }
+
+
+    validateTarget() {
     var validatorOut, errs: any = {};
       if (!this.target.druidDS) {
         errs.druidDS = "You must supply a druidDS name.";
