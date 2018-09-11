@@ -417,6 +417,22 @@
                         </a>
                     </label>
                 </div>
+
+                <div ng-switch-when="javascript">
+                    <label class="gf-form-label">
+                        {{aggregator.type}}:&nbsp;name&nbsp;=&nbsp;{{aggregator.name}},&nbsp;fieldNames&nbsp;=&nbsp;{{aggregator.fieldNames}},
+                        fnAggregate&nbsp;=&nbsp;{{aggregator.fnAggregate}},fnCombine&nbsp;=&nbsp;{{aggregator.fnCombine}},
+                        fnReset&nbsp;=&nbsp;{{aggregator.fnReset}}
+                        <a ng-click="ctrl.editAggregator($index)">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a ng-click="ctrl.removeAggregator($index)">
+                            <i class="fa fa-remove"></i>
+                        </a>
+                    </label>
+                </div>
+
+
             </div>
             <label class="gf-form-label" ng-if="aggregator.hidden">&nbsp;)</label>
         </div>
@@ -485,6 +501,29 @@
                    spellcheck='false' ng-model="ctrl.target.currentAggregator.upperLimit" placeholder="upperLimit"
                    ng-blur="ctrl.targetBlur()">
         </div>
+
+        <div class="gf-form" ng-show="ctrl.addAggregatorMode" ng-switch on="ctrl.target.currentAggregator.type">
+            <div ng-switch-when="javascript" class="gf-form">
+            <input type="text" class="gf-form-input "
+                   spellcheck='false' ng-model="ctrl.target.currentAggregator.name" placeholder="output name"
+                   ng-blur="ctrl.targetBlur()">
+            <input type="text" class="gf-form-input"
+                   spellcheck='false' ng-model="ctrl.target.currentAggregator.fieldNames" placeholder="fieldNames"
+                   bs-typeahead="ctrl.getMetrics" ng-blur="ctrl.targetBlur()">
+
+            <textarea type="text" class="input-large gf-form-input width-40"
+                   spellcheck='false' rows="5" ng-model="ctrl.target.currentAggregator.fnAggregate" placeholder="function(current, c1, c2) {return current + c1 + c2}"
+                   ng-blur="ctrl.targetBlur()"/>
+
+            <textarea  class="input-large gf-form-input width-40"
+                   spellcheck='false' rows="5" ng-model="ctrl.target.currentAggregator.fnCombine" placeholder="function(partialA, partialB) {return partialA + partialB}"
+                   ng-blur="ctrl.targetBlur()"/>
+            <textarea type="text" class="input-large gf-form-input width-40"
+                   spellcheck='false' rows="5" ng-model="ctrl.target.currentAggregator.fnReset" placeholder="function() {return 0}"
+                   ng-blur="ctrl.targetBlur()"/>
+         </div>
+        </div>
+
         <div class="gf-form" ng-show="ctrl.addAggregatorMode" ng-switch on="ctrl.target.currentAggregator.type">
             <input type="text" ng-switch-when="hyperUnique" class="input-small gf-form-input width-10"
                    spellcheck='false' ng-model="ctrl.target.currentAggregator.name" placeholder="output name"
@@ -509,7 +548,7 @@
                    spellcheck='false' ng-model="ctrl.target.currentAggregator.size" ng-blur="ctrl.targetBlur()"
                    placeholder="size" data-min-length=0>
         </div>
-        <div class="gf-form" ng-show="ctrl.addAggregatorMode">
+        <div class="gf-form" ng-show="ctrl.addAggregatorMode width-7" >
             <label class="gf-form-label">
                 <a ng-click="ctrl.addAggregator()">add tag</a>
                 <a ng-click="ctrl.clearCurrentAggregator()"><i class="fa fa-remove"></i></a>

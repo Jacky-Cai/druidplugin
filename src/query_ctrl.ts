@@ -46,7 +46,8 @@ export class DruidQueryCtrl extends QueryCtrl {
       "doubleSum": _.partial(this.validateSimpleAggregator.bind(this), 'doubleSum'),
       "approxHistogramFold": this.validateApproxHistogramFoldAggregator.bind(this),
       "hyperUnique": _.partial(this.validateSimpleAggregator.bind(this), 'hyperUnique'),
-      "thetaSketch": this.validateThetaSketchAggregator.bind(this)
+      "thetaSketch": this.validateThetaSketchAggregator.bind(this),
+      "javascript": this.validateJavascriptAggregator.bind(this),
     };
     postAggregatorValidators = {
         "arithmetic": this.validateArithmeticPostAggregator.bind(this),
@@ -503,6 +504,16 @@ export class DruidQueryCtrl extends QueryCtrl {
       if (err) { return err;}
       return null;
     }
+
+    validateJavascriptAggregator(target) {
+        var err = this.validateSimpleAggregator('javascript', target);
+        if (err) { return err;}
+        if (target.currentAggregator.fieldNames && !Array.isArray(target.currentAggregator.fieldNames)) {
+            target.currentAggregator.fieldNames = target.currentAggregator.fieldNames.split(",");
+        }
+        return null;
+    }
+
 
     validateSimplePostAggregator(type, target) {
       if (!target.currentPostAggregator.name) {
