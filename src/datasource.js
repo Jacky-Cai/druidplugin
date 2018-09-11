@@ -31,6 +31,7 @@ function (angular, _, dateMath, moment) {
     instanceSettings.jsonData = instanceSettings.jsonData || {};
     this.supportMetrics = true;
     this.periodGranularity = instanceSettings.jsonData.periodGranularity;
+    this.timeout = Number(instanceSettings.jsonData.timeout);
 
     function replaceTemplateValues(obj, attrList) {
       var substitutedVals = attrList.map(function (attr) {
@@ -328,6 +329,13 @@ function (angular, _, dateMath, moment) {
         url: this.url + '/druid/v2/',
         data: query
       };
+      if(this.timeout > 0) {
+          if(!query.context) {
+              query.context = {timeout: this.timeout}
+          } else {
+            query.context.timeout = this.timeout;
+          }
+      }
       console.log("Make http request");
       console.log(options);
       return backendSrv.datasourceRequest(options);

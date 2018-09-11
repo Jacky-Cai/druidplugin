@@ -119,6 +119,21 @@
             <info-popover mode="right-absolute">This enables the to query hourly data in different timezone.</info-popover>
         </div>
     </div>
+
+    <div class="gf-form max-width-70">
+        <span class="gf-form-label">Query Timeout(in seconds)</span>
+        <div class="gf-form-select-wrapper gf-form-select-wrapper--has-help-icon max-width-50">
+            <select class="gf-form-input" ng-model="ctrl.current.jsonData.timeout" spellcheck='false'>
+                <option value="-1000">default to server</option>
+                <option value="10000">10</option>
+                <option selected="selected" value="30000">30</option>
+                <option value="90000">90</option>
+                <option value="120000">120</option>
+                <option value="240000">240</option>
+                <option value="0">no timeout</option>
+            </select>
+        </div>
+    </div>
 </div>
 
 
