@@ -506,8 +506,8 @@ export class DruidQueryCtrl extends QueryCtrl {
     }
 
     validateJavascriptAggregator(target) {
-        var err = this.validateSimpleAggregator('javascript', target);
-        if (err) { return err;}
+        // var err = this.validateSimpleAggregator('javascript', target);
+        // if (err) { return err;}
         if (target.currentAggregator.fieldNames && !Array.isArray(target.currentAggregator.fieldNames)) {
             target.currentAggregator.fieldNames = target.currentAggregator.fieldNames.split(",");
         }

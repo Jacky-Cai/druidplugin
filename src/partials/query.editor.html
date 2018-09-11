@@ -512,15 +512,15 @@
                    bs-typeahead="ctrl.getMetrics" ng-blur="ctrl.targetBlur()">
 
             <textarea type="text" class="input-large gf-form-input width-40"
-                   spellcheck='false' rows="5" ng-model="ctrl.target.currentAggregator.fnAggregate" placeholder="function(current, c1, c2) {return current + c1 + c2}"
-                   ng-blur="ctrl.targetBlur()"/>
+                   spellcheck='false' rows="5" ng-model="ctrl.target.currentAggregator.fnAggregate" placeholder="function(c0, c1, c2) {return c0 + c1 + c2}"
+                   ng-blur="ctrl.targetBlur()"></textarea>
 
             <textarea  class="input-large gf-form-input width-40"
-                   spellcheck='false' rows="5" ng-model="ctrl.target.currentAggregator.fnCombine" placeholder="function(partialA, partialB) {return partialA + partialB}"
-                   ng-blur="ctrl.targetBlur()"/>
+                   spellcheck='false' rows="5" ng-model="ctrl.target.currentAggregator.fnCombine" placeholder="function(p1, p2) {return p1 + p2}"
+                   ng-blur="ctrl.targetBlur()"></textarea>
             <textarea type="text" class="input-large gf-form-input width-40"
                    spellcheck='false' rows="5" ng-model="ctrl.target.currentAggregator.fnReset" placeholder="function() {return 0}"
-                   ng-blur="ctrl.targetBlur()"/>
+                   ng-blur="ctrl.targetBlur()"></textarea>
          </div>
         </div>
 
@@ -548,7 +548,7 @@
                    spellcheck='false' ng-model="ctrl.target.currentAggregator.size" ng-blur="ctrl.targetBlur()"
                    placeholder="size" data-min-length=0>
         </div>
-        <div class="gf-form" ng-show="ctrl.addAggregatorMode width-7" >
+        <div class="gf-form width-7" ng-show="ctrl.addAggregatorMode" >
             <label class="gf-form-label">
                 <a ng-click="ctrl.addAggregator()">add tag</a>
                 <a ng-click="ctrl.clearCurrentAggregator()"><i class="fa fa-remove"></i></a>
