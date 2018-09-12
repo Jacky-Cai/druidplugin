@@ -1,7 +1,7 @@
 <datasource-http-settings current="ctrl.current"></datasource-http-settings>
 <div class="gf-form-group">
     <h3 class="page-heading">Druid Settings</h3>
-    <div class="gf-form max-width-70">
+    <div class="gf-form max-width-100">
         <span class="gf-form-label">Period Granularity</span>
         <div class="gf-form-select-wrapper gf-form-select-wrapper--has-help-icon max-width-50">
             <select class="gf-form-input" ng-model="ctrl.current.jsonData.periodGranularity"
@@ -119,7 +119,7 @@
             <info-popover mode="right-absolute">This enables the to query hourly data in different timezone.</info-popover>
         </div>
 
-        <span class="gf-form-label">Query Timeout(in seconds)</span>
+        <span class="gf-form-label">Timeout(in seconds)</span>
         <div class="gf-form-select-wrapper gf-form-select-wrapper--has-help-icon max-width-50">
             <select class="gf-form-input" ng-model="ctrl.current.jsonData.timeout" spellcheck='false'>
                 <option value="-1000">default_to_server</option>
@@ -130,6 +130,11 @@
                 <option value="240000">240</option>
                 <option value="0">no_timeout</option>
             </select>
+        </div>
+
+        <span class="gf-form-label">Round to Minute</span>
+        <div class="gf-form-select-wrapper gf-form-select-wrapper--has-help-icon max-width-50">
+           <input type="checkbox" value="checked" ng-model="ctrl.current.jsonData.roundToMinute"/>
         </div>
     </div>
 

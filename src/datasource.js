@@ -32,6 +32,7 @@ function (angular, _, dateMath, moment) {
     this.supportMetrics = true;
     this.periodGranularity = instanceSettings.jsonData.periodGranularity;
     this.timeout = Number(instanceSettings.jsonData.timeout);
+    this.roundToMinute = instanceSettings.jsonData.roundToMinute;
 
     function replaceTemplateValues(obj, attrList) {
       var substitutedVals = attrList.map(function (attr) {
@@ -89,7 +90,7 @@ function (angular, _, dateMath, moment) {
             "dimension": target.currentFilter.dimension,
             "metric": "count",
             "aggregations": [{ "type" : "count", "name" : "count" }],
-            "intervals" : getQueryIntervals(panelRange.from, panelRange.to)
+            "intervals" : getQueryIntervals(panelRange.from, panelRange.to, this.roundToMinute)
         };
 
         var filters = [];
@@ -171,7 +172,7 @@ function (angular, _, dateMath, moment) {
       var groupBy = _.map(target.groupBy, (e) => { return templateSrv.replace(e) });
       var limitSpec = null;
       var metricNames = getMetricNames(aggregators, postAggregators);
-      var intervals = getQueryIntervals(from, to);
+      var intervals = getQueryIntervals(from, to, this.roundToMinute);
       var promise = null;
 
       var selectMetrics = target.selectMetrics;
@@ -375,7 +376,11 @@ function (angular, _, dateMath, moment) {
       return null;
     }
 
-    function getQueryIntervals(from, to) {
+    function getQueryIntervals(from, to, roundToMinute) {
+      if(roundToMinute) {
+        from.set({second:0, millisecond:0});
+        to.set({second:0, millisecond:0})
+      }
       return [from.toISOString() + '/' + to.toISOString()];
     }
 
