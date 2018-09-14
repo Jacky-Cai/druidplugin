@@ -184,12 +184,13 @@ function (angular, _, dateMath, moment) {
 
       if (target.queryType === 'topN') {
         var threshold = target.limit;
-        var metric = target.druidShowMetric ? target.druidShowMetric : target.druidMetric;
+        var metric = target.druidMetric;
+        var showMetric = target.druidShowMetric ? target.druidShowMetric : target.druidMetric;
         var dimension = templateSrv.replace(target.dimension);
         promise = this._topNQuery(datasource, intervals, granularity, filters, aggregators, postAggregators, threshold, metric, dimension)
           .then(function(response) {
               if(target.queryMode === "timeseries") {
-                  return convertTopNTimeSeriesData(response.data, dimension, metric);
+                  return convertTopNTimeSeriesData(response.data, dimension, showMetric);
               }//else table
               return convertTopNTableData(response.data, dimension, metricNames)
           });
