@@ -1,7 +1,11 @@
 ## Grafana Version Compatibility:
 **Druid plugin version 0.0.3 and below are supported for Grafana: 3.x.x**
 
-**Druid plugin 0.0.4 and above are supported for Grafana: 4.x.x**
+**Druid plugin 0.0.4 and above are supported for Grafana: 4.x.x** 
+
+**Druid plugin 0.0.5 and above are supported for Grafana: 5.x.x** 
+
+a few enhancements like javascript aggregation/postaggregation and table support for topN/group query 
 
 # Grafana plugin for [Druid](http://druid.io/) real-time OLAP database
 
